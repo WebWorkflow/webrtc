@@ -1,0 +1,25 @@
+# Используем node версии, подходящей для вашего проекта
+FROM node:latest
+
+# Создание и установка директории приложения в контейнере
+WORKDIR /usr/src/microserv
+
+# Копирование package.json и package-lock.json
+COPY package*.json ./
+COPY nest-cli.json ./
+COPY tsconfig.json  ./
+COPY tsconfig.build.json  ./
+COPY .eslintrc.js ./
+COPY .prettierrc ./
+
+# Установка зависимостей
+RUN npm install
+
+# Копирование всех файлов вашего приложения
+COPY src/ /usr/src/microserv/.
+
+# Указание порта, который должен слушать ваше приложение
+EXPOSE 3001
+
+# Команда для запуска вашего приложения
+CMD ["npm", "run", "start"]

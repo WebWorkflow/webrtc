@@ -1,0 +1,27 @@
+# Используйте node версии, подходящей для вашего проекта
+FROM node:latest
+
+# Создание и установка директории приложения в контейнере
+WORKDIR /usr/src/frontend
+
+# Копирование package.json и package-lock.json
+COPY package*.json ./
+COPY tsconfig.json ./
+COPY .eslintrc.json ./
+COPY next-env.d.ts ./
+COPY next.config.js ./
+
+# Установка зависимостей
+RUN npm install
+
+# Копирование файлов вашего приложения
+COPY  app ./app/
+
+# Сборка вашего приложения
+RUN npm run build
+
+# Указание порта, который должен слушать ваше приложение
+EXPOSE 3000
+
+# Команда для запуска вашего приложения
+CMD ["npm", "start"]
