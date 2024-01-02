@@ -1,6 +1,12 @@
 import { WebSocketGateway, WebSocketServer, SubscribeMessage, OnGatewayConnection, OnGatewayDisconnect, MessageBody, ConnectedSocket } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
+interface roomJoin{
+  roomID:string,
+  userID:string,
+}
+
+
 @WebSocketGateway(80,{cors:{
   origin:"*",
 }})
@@ -16,9 +22,9 @@ export class SignalingGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage('join-room')
-  handleJoinRoom(@MessageBody() roomID: string, @MessageBody() userId: string, client: Socket) {
-    client.join(roomID)
-    console.log(`User ${userId} joined room ${roomID}`)
+  handleJoinRoom(@MessageBody() prop:roomJoin, @ConnectedSocket() client: Socket) {
+    client.join(prop.roomID)
+    console.log(`User ${client.id} joined room ${prop.roomID}`)
   }
 
   @SubscribeMessage('signal')
@@ -27,15 +33,10 @@ export class SignalingGateway implements OnGatewayConnection, OnGatewayDisconnec
       if (client) {
       console.log(data)
         const info=data["signalData"]?data.signalData:data
-        
-          client.broadcast.emit('signal', info);
+          client.broadcast.to("1").emit('signal', info);
       } else {
           console.error("Socket is undefined or not initialized.");
       }
-  }
-  @SubscribeMessage("recievedoffer")
-  handleRecieve(){
-    console.log("recieved offer prod answer")
   }
   
 }

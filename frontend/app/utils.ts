@@ -7,10 +7,15 @@ type resOfPromese<T>=Awaited<asyncValue<T>|null>
 export const servers = {
     iceServers: [
       {
+        configuration:{
+offerToReceiveAudio:true,
+offerToReceiveVideo:true,
+        },
         urls: [
-          'stun:stun1.l.google.com:19302',
-          'stun:stun2.l.google.com:19302',
-          'stun:openrelay.metered.ca:80'
+           'stun:stun1.l.google.com:19302',
+          // 'stun:stun2.l.google.com:19302',
+          //'stun:openrelay.metered.ca:80'
+         
         ],
       },
     ],
