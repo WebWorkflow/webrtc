@@ -44,6 +44,7 @@ export default function MediaConference(){
      
        pc.ontrack = (event) => {
       if (!remoteStream) remoteStream = new MediaStream();
+      console.log("track"+event.track.id)
       remoteStream.addTrack(event.track);
       if (externalVideo.current) externalVideo.current.srcObject = remoteStream;
       }, []});

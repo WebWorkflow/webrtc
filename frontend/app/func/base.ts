@@ -10,9 +10,7 @@ export const  connection=()=>io('ws://localhost:80', {transports: ['websocket']}
 export const sendOffer=async (socket: ReturnType<typeof connection>,pc:RTCPeerConnection)=>{
    const offer=await pc.createOffer()
       await  pc.setLocalDescription(offer)
-    
       await socket.emit('signal', { roomID: '1', signalData: offer })
-        
      
 }
 
