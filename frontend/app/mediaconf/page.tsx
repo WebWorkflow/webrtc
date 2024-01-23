@@ -2,7 +2,7 @@
 import { Box, Button, Stack, TextField } from "@mui/material"
 import CandlestickChartIcon from '@mui/icons-material/CandlestickChart';
 import { useEffect, useRef, useState } from "react";
-import { connection, sendOffer, socketMessageReaction } from "../func/base";
+import { connection, joinRoom, sendOffer, socketMessageReaction } from "../func/base";
 import { constarits, servers } from "../utils";
 
 export default function MediaConference(){
@@ -13,7 +13,7 @@ export default function MediaConference(){
     const localVideo = useRef<HTMLVideoElement>(null)
     const externalVideo = useRef<HTMLVideoElement>(null)
     const getConnection = async () => {
-        socket.emit("join-room",{roomID:"1",userID:2})
+         joinRoom(socket,1,1)
         return await navigator.mediaDevices.getUserMedia(constarits)
       }
     
@@ -35,7 +35,7 @@ export default function MediaConference(){
     
       useEffect(() => {
          pc = new RTCPeerConnection(servers);
-         socket.on('signal', async (data) => {
+         socket.on('answer', async (data) => {
           if (data.type==="offer") setAnswer("offer")
           if (data.type==="answer") setAnswer("answer")
          })
@@ -62,8 +62,9 @@ export default function MediaConference(){
          </Box>
       <video id="localVideo" autoPlay playsInline controls ref={localVideo} />
       <video id="remoteVideos" autoPlay playsInline controls ref={externalVideo} />
-      {shouldAnswer==="offer"&&alert("Вам звонят")}
-      {shouldAnswer==="answer"&&alert("Вам ответили на звонок")}
+      {/* {shouldAnswer==="offer"&&alert("Вам звонят")}
+      {shouldAnswer==="answer"&&alert("Вам ответили на звонок")} */}
+
       <Button onClick={()=>{sendOffer(socket,pc)}}> send Offer</Button>
     </>)
 }
